@@ -8,13 +8,13 @@ Created on Tue Aug  8 22:40:39 2023
 
 
 from core.classes import Dataset, SeriesID
-from core.funcs import stockpile_usa_hist
+from core.funcs import stockpile
 
 if __name__ == '__main__':
 
     SERIES_IDS = [SeriesID('J0149', Dataset.USCB)]
 
-    df = stockpile_usa_hist(SERIES_IDS)
+    df = stockpile(SERIES_IDS)
     print(df)
 
     df = df.iloc[:, :-1]
