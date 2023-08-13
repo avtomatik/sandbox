@@ -39,8 +39,37 @@ class Dataset(str, Enum):
             'header': 0,
             'names': NAMES,
             'index_col': 1,
-            'skiprows': (0, 4)[self.value == 'dataset_usa_brown.zip'],
+            'skiprows': (0, 4)[self.name in ['USA_BROWN']],
             'usecols': self.usecols,
+        }
+
+
+class DatasetDesc(str, Enum):
+
+    def __new__(cls, value: str, usecols: range):
+        obj = str.__new__(cls)
+        obj._value_ = value
+        obj.usecols = usecols
+        return obj
+
+    DOUGLAS = 'dataset_douglas.zip', range(3, 5)
+    USA_KENDRICK = 'dataset_usa_kendrick.zip', range(3, 5)
+    USCB = 'dataset_uscb.zip', [0, 1, 3, 4, 5, 6, 9]
+
+    def get_kwargs(self) -> dict[str, Any]:
+
+        NAMES = [
+            'source', 'table', 'note', 'group1', 'group2', 'group3', 'series_id'
+        ]
+
+        return {
+            'filepath_or_buffer': Path(__file__).parent.parent.parent.joinpath('data').joinpath(self.value),
+            'header': 0,
+            'names': (None, NAMES)[self.name in ['USCB']],
+            'index_col': (None, 1)[self.name in ['DOUGLAS', 'USA_KENDRICK']],
+            'skiprows': (0, 4)[self.name in ['USA_BROWN']],
+            'usecols': self.usecols,
+            'low_memory': (True, False)[self.name in ['USCB']],
         }
 
 
